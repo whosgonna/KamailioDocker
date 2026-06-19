@@ -1,0 +1,27 @@
+[Unit]
+Description=Kamailio SIP Proxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+TimoutStartSec=0
+Restart=always
+Environment="CONTAINER_IMAGE=whosgonna/kamailio"
+Environment="IMAGE_TAG=${IMAGE_TAG:-latest}"
+Environment="VOLUMES="
+Environment="EXTRA_PORTS"
+Environment="ENV_FILE=/usr/local/etc/kamailio/.env"
+
+
+ExecStart=/usr/bin/docker \
+    run --rm \
+    --name kamailio \
+	--network host \
+	--env-file $ENV_FILE \
+	$VOLUMES \
+
+
+
+[Install]
+WantedBy=multi-user.target

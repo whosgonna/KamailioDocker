@@ -46,11 +46,11 @@ RUN    apt update \
     && rm -f ${SIPEXER_FILE} \
 \
     && apt clean \
-    && rm -rf /var/lib/apt/lists/* 
+    && rm -rf /var/lib/apt/lists/*
 
 
 ## For the benefit of sngrep
 ENV TERM=screen
 
-ENTRYPOINT ["/usr/sbin/kamailio", "-DDEd"]
+ENTRYPOINT ["/usr/sbin/kamailio", "-DDEd", "-u", "kamailio", "-g", "kamailio"]
 
