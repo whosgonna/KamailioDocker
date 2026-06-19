@@ -1,0 +1,41 @@
+[Unit]
+Description=Kamailio SIP Proxy
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+TimoutStartSec=0
+Restart=always
+Environment="CONTAINER_IMAGE=whosgonna/kamailio"
+
+## Likely to be change with each image iteration:
+Environment="IMAGE_TAG=latest"
+
+Environment="ENV_FILE=/usr/local/etc/kamailio/.env"
+
+## Volumes should be expressed in docker syntax for volume mounting. For
+## example, to mount /usr/local/etc/kamailio in the container's /etc/kamailio
+## directory:
+## Environment="VOLUMES=-v /usr/local/etc/kamailio:/etc/kamailio"
+Environment="VOLUMES="
+
+Environment="EXTRA_DOCKER_ARGS="
+Environment="EXTRA_KAM_ARGS="
+
+
+ExecStart=/usr/bin/docker \
+    run --rm \
+    --name kamailio \
+	--network host \
+	--env-file $ENV_FILE \
+	$VOLUMES \
+    $EXTRA_DOCKER_ARGS \
+    ${CONTAINER_IMAGE}:${IMAGE_TAG} \
+    ${EXTRA_KAM_ARGS}
+
+ExecStop=/usr/sbin/docker stop kamailio
+
+
+[Install]
+WantedBy=multi-user.target
